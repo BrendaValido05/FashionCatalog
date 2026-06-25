@@ -17,6 +17,8 @@ import es.ulpgc.eite.da.fashioncatalog.data.CategoryItem;
 
 import es.ulpgc.eite.da.fashioncatalog.products.ProductListActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 public class CategoryListActivity
         extends AppCompatActivity implements CategoryListContract.View {
@@ -28,6 +30,8 @@ public class CategoryListActivity
 
     //Adapter de CategoryList
     private CategoryListAdapter listAdapter;
+
+    private FloatingActionButton goTofavouriteButtonFB;
 
     //onCreate de CategoryList
     @Override
@@ -79,6 +83,7 @@ public class CategoryListActivity
         //Establecemos el adapter
         recyclerView.setAdapter(listAdapter);
 
+        goTofavouriteButtonFB = findViewById(R.id.goTofavouriteButtonFB);
 
         // do the setup
         CategoryListScreen.configure(this);
@@ -120,6 +125,16 @@ public class CategoryListActivity
     @Override
     public void injectPresenter(CategoryListContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void showFavoriteButton() {
+        goTofavouriteButtonFB.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideFavoriteButton() {
+        goTofavouriteButtonFB.setVisibility(View.INVISIBLE);
     }
 
 }

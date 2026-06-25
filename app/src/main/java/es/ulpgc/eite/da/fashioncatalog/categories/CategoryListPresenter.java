@@ -51,6 +51,16 @@ public class CategoryListPresenter implements CategoryListContract.Presenter {
             }
         });
         // Ocultamos el botón de favoritos si el usuario es nulo
+        showFavoriteButton();
+    }
+
+    public void showFavoriteButton() {
+        Log.e(TAG, "showFavoriteButton()");
+        if (user != null) {
+            view.get().showFavoriteButton();
+        } else {
+            view.get().hideFavoriteButton();
+        }
     }
 
 

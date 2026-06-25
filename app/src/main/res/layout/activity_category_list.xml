@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:src="@drawable/ic_favorite_border_empty"
         app:backgroundTint="@color/colorPrimary"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
