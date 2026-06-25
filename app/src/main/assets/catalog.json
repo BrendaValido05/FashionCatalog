@@ -1,0 +1,107 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "content": "Bolsos",
+      "details": "Bolsos de mano, mochilas y bandoleras para cualquier ocasión, combinando funcionalidad y estilo.",
+      "products": [
+        {
+          "id": 1,
+          "content": "Bolso mini abalorios",
+          "picture": "https://static.zara.net/assets/public/6f76/24d8/3ac74a83bac3/527695578d1d/16013810604-e1/16013810604-e1.jpg?ts=1781602955466&w=1374",
+          "details": "Bolso formato mini. Cuerpo estampado con abalorios y cuentas. Doble asa de mano y asa función bandolera extraíble. Bolsillo interior. Cierre mediante botón imantado. Alto x Ancho x Fondo: 13 x 21 x 8 cm"
+        },
+        {
+          "id": 2,
+          "content": "Bolso de mano efecto metalizado",
+          "picture": "https://static.zara.net/assets/public/0d88/e0aa/cdcd4f9e8661/da862de55a94/16201810254-e1/16201810254-e1.jpg?ts=1780910070370&w=1374",
+          "details": "Bolso formato mini en efecto metalizado. Bolsillo interior con cremallera. Asa de mano con detalle metálico y asa bandolera extraíble en cadena. Cierre mediante cremallera. Alto x Ancho x Fondo: 14 x 20,5 x 9 cm"
+        },
+        {
+          "id": 3,
+          "content": "Mini bandolera fruncida piel",
+          "picture": "https://static.zara.net/assets/public/023d/a68c/8f3c441aac79/bbf8bbfdc0af/16138710718-e1/16138710718-e1.jpg?ts=1774012447069&w=1374",
+          "details": "Bolso mini formato bandolera en piel. Asa ajustable. Bolsillo interior con cremallera. Cierre mediante fruncido y stopper con detalle de borlas. Alto x Ancho x Fondo: 19 x 18 x 4 cm"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "content": "Zapatos",
+      "details": "Calzado para todos los estilos: deportivo, casual y formal.",
+      "products": [
+        {
+          "id": 4,
+          "content": "Zapatillas deportivas",
+          "picture": "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Zapatillas running con amortiguación ligera y malla transpirable."
+        },
+        {
+          "id": 5,
+          "content": "Botines de cuero",
+          "picture": "https://images.pexels.com/photos/267301/pexels-photo-267301.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Botines de cuero genuino con suela de goma antideslizante, combinables con looks casuales o formales."
+        },
+        {
+          "id": 6,
+          "content": "Zapatos de vestir",
+          "picture": "https://images.pexels.com/photos/292999/pexels-photo-292999.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Zapatos formales en piel, acabado pulido, ideales para eventos y oficina."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "content": "Ropa",
+      "details": "Prendas de temporada para hombre y mujer: camisetas, pantalones y abrigos.",
+      "products": [
+        {
+          "id": 7,
+          "content": "Camiseta básica de algodón",
+          "picture": "https://images.pexels.com/photos/428340/pexels-photo-428340.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Camiseta de algodón 100%, corte regular, disponible en varios colores."
+        },
+        {
+          "id": 8,
+          "content": "Vaqueros slim fit",
+          "picture": "https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Pantalón vaquero ajustado, tejido elástico para mayor comodidad."
+        },
+        {
+          "id": 9,
+          "content": "Abrigo de invierno",
+          "picture": "https://images.pexels.com/photos/1485031/pexels-photo-1485031.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Abrigo acolchado con capucha, ideal para climas fríos."
+        }
+
+      ]
+    },
+    {
+      "id": 4,
+      "content": "Accesorios",
+      "details": "Complementos para terminar de definir tu estilo: relojes, gafas y cinturones.",
+      "products": [
+        {
+          "id": 10,
+          "content": "Reloj analógico",
+          "picture": "https://images.pexels.com/photos/277390/pexels-photo-277390.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Reloj analógico de correa de cuero, resistente al agua hasta 30 metros."
+        },
+        {
+          "id": 11,
+          "content": "Gafas de sol",
+          "picture": "https://images.pexels.com/photos/46710/pexels-photo-46710.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Gafas de sol con protección UV400 y montura ligera de policarbonato."
+        },
+        {
+          "id": 12,
+          "content": "Cinturón de piel",
+          "picture": "https://images.pexels.com/photos/2682107/pexels-photo-2682107.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "details": "Cinturón de piel genuina con hebilla metálica, disponible en varias tallas."
+        }
+      ]
+    }
+  ]
+
+
+}

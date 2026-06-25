@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Fashion Catalog</string>
+
+    <string name="title_category_list">Category List</string>
+    <string name="title_product_list">Products</string>
+    <string name="title_product_detail">Product Detail</string>
+    <string name="title_favorite_list">Lista de Favoritos</string>
+
+    <string name="title_login_screen">Login/Register Screen</string>
+
+    <string name="emailString">Correo</string>
+    <string name="PasswordString">Contraseña</string>
+    <string name="nameString">Nombre</string>
+
+    <string name="item_content">Item Content</string>
+    <string name="item_details">Item Details</string>
+    <string name="logInButtonText">INICIAR SESIÓN</string>
+    <string name="signUpButtonText">REGISTRARSE</string>
+    <string name="GuestButtonText">ENTRAR COMO INVITADO</string>
+
+
+</resources>
