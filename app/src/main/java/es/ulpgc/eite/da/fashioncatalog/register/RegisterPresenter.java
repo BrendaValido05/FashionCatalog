@@ -13,16 +13,14 @@ public class RegisterPresenter implements RegisterContract.Presenter {
 
   public static String TAG = RegisterPresenter.class.getSimpleName();
 
-  //Variable que almacena la vista
   private WeakReference<RegisterContract.View> view;
-  //Variable que almacena el modelo
+
   private RegisterContract.Model model;
-  //Variable que almacena el state (proviene del mediator, igual que el resto de pantallas)
+
   private RegisterState state;
-  //Variable que almacena el mediator
+
   private CatalogMediator mediator;
 
-  //Constructor de RegisterPresenter
   public RegisterPresenter(CatalogMediator mediator) {
     this.mediator = mediator;
     state = mediator.getRegisterState();

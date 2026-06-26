@@ -9,7 +9,6 @@ import es.ulpgc.eite.da.fashioncatalog.data.UserItem;
 interface RegisterContract {
 
   interface View {
-    //Método para inyectar el presenter
     void injectPresenter(Presenter presenter);
 
     void onDataUpdate(RegisterState state);
@@ -29,10 +28,8 @@ interface RegisterContract {
   }
 
   interface Presenter {
-    //Método para inyectar la vista
     void injectView(WeakReference<View> view);
 
-    //Método para inyectar el modelo
     void injectModel(Model model);
 
     void registerUser(String name, String email, String password);

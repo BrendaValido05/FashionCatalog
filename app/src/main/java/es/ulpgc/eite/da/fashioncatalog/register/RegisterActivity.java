@@ -15,7 +15,6 @@ public class RegisterActivity extends AppCompatActivity implements RegisterContr
 
     public static String TAG = RegisterActivity.class.getSimpleName();
 
-    //Presenter de Register
     RegisterContract.Presenter presenter;
 
     private EditText nameEditText;
