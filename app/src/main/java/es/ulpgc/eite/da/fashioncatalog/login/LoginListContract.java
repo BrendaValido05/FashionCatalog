@@ -12,6 +12,8 @@ interface LoginListContract {
 
     void navigateToCategoryListScreen();
 
+    void navigateToRegisterScreen();
+
       //Método para inyectar el presenter
     void injectPresenter(Presenter presenter);
 

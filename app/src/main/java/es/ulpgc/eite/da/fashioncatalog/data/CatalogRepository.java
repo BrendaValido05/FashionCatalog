@@ -305,6 +305,28 @@ public class CatalogRepository implements RepositoryContract {
 
 
 
+    @Override
+    public void registerUser(final UserItem user, final RegisterUserCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                UserItem existing = getUserDao().loadUserByEmail(user.email);
+                if (existing != null) {
+                    //Ya existe un usuario con ese email: no se inserta
+                    if (callback != null) {
+                        callback.onUserRegistered(false, true);
+                    }
+                    return;
+                }
+                //Insertamos el usuario nuevo (id autogenerado por Room)
+                getUserDao().insertUser(user);
+                if (callback != null) {
+                    callback.onUserRegistered(true, false);
+                }
+            }
+        });
+    }
+
     private boolean loadCatalogFromJSON(String json) {
         Log.e(TAG, "loadCatalogFromJSON()");
 

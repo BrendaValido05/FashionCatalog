@@ -7,6 +7,7 @@ import es.ulpgc.eite.da.fashioncatalog.data.UserItem;
 import es.ulpgc.eite.da.fashioncatalog.login.LoginListState;
 import es.ulpgc.eite.da.fashioncatalog.product.ProductDetailState;
 import es.ulpgc.eite.da.fashioncatalog.products.ProductListState;
+import es.ulpgc.eite.da.fashioncatalog.register.RegisterState;
 
 
 public class CatalogMediator {
@@ -18,6 +19,7 @@ public class CatalogMediator {
     //Estado del detalle de un Producto
     private ProductDetailState productDetailState = new ProductDetailState();
     private  LoginListState loginListState = new LoginListState();
+    private RegisterState registerState = new RegisterState();
 
 
     //Variable que representa la categoria seleccionada
@@ -65,6 +67,10 @@ public class CatalogMediator {
 
     public LoginListState getLoginListState() {
         return loginListState;
+    }
+
+    public RegisterState getRegisterState() {
+        return registerState;
     }
 
 

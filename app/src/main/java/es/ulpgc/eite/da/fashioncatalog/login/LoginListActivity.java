@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import es.ulpgc.eite.da.fashioncatalog.R;
 import es.ulpgc.eite.da.fashioncatalog.categories.CategoryListActivity;
+import es.ulpgc.eite.da.fashioncatalog.register.RegisterActivity;
+
 
 
 //Activity de CategoryList
@@ -28,6 +30,7 @@ public class LoginListActivity extends AppCompatActivity implements LoginListCon
   //Declaramos los botones y los EditText para trabajar con ellos
   private Button loginButton;
   private Button registerButton;
+
   private Button guestButton;
   private EditText emailEditText;
   private EditText passwordEditText;
@@ -50,6 +53,7 @@ public class LoginListActivity extends AppCompatActivity implements LoginListCon
     emailEditText = findViewById(R.id.emailPlainText);
     passwordEditText = findViewById(R.id.passwordPlainText);
 
+
     //Añadimos la función de entrar como invitado
     guestButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -65,6 +69,8 @@ public class LoginListActivity extends AppCompatActivity implements LoginListCon
         presenter.checkLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
       }
     });
+
+    registerButton.setOnClickListener(v -> navigateToRegisterScreen());
 
 
 
@@ -82,6 +88,12 @@ public class LoginListActivity extends AppCompatActivity implements LoginListCon
     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
   }
+
+  @Override
+  public void navigateToRegisterScreen() {
+      Intent intent = new Intent(this, RegisterActivity.class);
+      startActivity(intent);
+    }
 
   @Override
   public void injectPresenter(LoginListContract.Presenter presenter) {
