@@ -43,6 +43,23 @@ public interface RepositoryContract {
         void onProductUpdated();
     }
 
+    interface FetchFavoriteProductsCallback {
+        void onFavoriteProductsFetched(List<ProductItem> products);
+    }
+    interface IsProductFavoriteCallback {
+        void onIsProductFavoriteChecked(boolean isFavorite);
+    }
+    public interface FavoriteItemCallback {
+        void onCallback(FavoriteItem favoriteItem);
+    }
+
+    void getFavoriteProductsByUserId(int userId, FetchFavoriteProductsCallback callback);
+
+    void isProductFavorite(int userId, int productId, IsProductFavoriteCallback callback);
+
+    void getFavoriteByUserAndProduct(int userId, int productId, FavoriteItemCallback callback);
+
+
 
     void loadCatalog(
             boolean clearFirst, CatalogRepository.FetchCatalogDataCallback callback);
@@ -78,7 +95,6 @@ public interface RepositoryContract {
 
     }
 
-    //*** MÉTODO DE REGISTRO DE USUARIO
     interface RegisterUserCallback {
         //success=true si se ha creado el usuario; duplicateEmail=true si el email ya existía
         void onUserRegistered(boolean success, boolean duplicateEmail);

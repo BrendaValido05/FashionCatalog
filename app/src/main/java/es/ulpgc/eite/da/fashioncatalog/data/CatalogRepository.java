@@ -22,7 +22,7 @@ import es.ulpgc.eite.da.fashioncatalog.database.CatalogDatabase;
 import es.ulpgc.eite.da.fashioncatalog.database.CategoryDao;
 import es.ulpgc.eite.da.fashioncatalog.database.ProductDao;
 import es.ulpgc.eite.da.fashioncatalog.database.UserDao;
-
+import es.ulpgc.eite.da.fashioncatalog.database.FavoriteDao;
 
 public class CatalogRepository implements RepositoryContract {
 
@@ -223,6 +223,47 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     @Override
+    public void getFavoriteByUserAndProduct(int userId, int productId, FavoriteItemCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Obtiene el FavoriteItem correspondiente al userId y productId
+                FavoriteItem favoriteItem = getFavoriteDao().getFavoriteByUserAndProduct(userId, productId);
+
+                // Llama al callback con el FavoriteItem
+                if (callback != null) {
+                    callback.onCallback(favoriteItem);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void isProductFavorite(int userId, int productId, IsProductFavoriteCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean isFavorite = getFavoriteDao().isFavorite(userId, productId);
+                if (callback != null) {
+                    callback.onIsProductFavoriteChecked(isFavorite);
+                }
+            }
+        });
+    }
+    @Override
+    public void getFavoriteProductsByUserId(final int userId, final FetchFavoriteProductsCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<ProductItem> productsFavorites = getFavoriteDao().getFavoriteProductsByUserId(userId);
+                if (callback != null) {
+                    callback.onFavoriteProductsFetched(productsFavorites);
+                }
+            }
+        });
+    }
+
+    @Override
     public void updateProduct(
             final ProductItem product, final UpdateProductCallback callback) {
 
@@ -272,24 +313,6 @@ public class CatalogRepository implements RepositoryContract {
     }
 
 
-
-    //? ¿Qué hace el callback?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private CategoryDao getCategoryDao() {
         return database.categoryDao();
     }
@@ -300,6 +323,9 @@ public class CatalogRepository implements RepositoryContract {
 
     private ProductDao getProductDao() {
         return database.productDao();
+    }
+    private FavoriteDao getFavoriteDao() {
+        return database.favoriteDao();
     }
 
 

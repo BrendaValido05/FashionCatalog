@@ -18,6 +18,7 @@ interface CategoryListContract {
 
         //Método para navegar a la pantalla de productos
         void navigateToProductListScreen();
+        void navigateToFavoriteListScreen();
 
         void showFavoriteButton();
 
