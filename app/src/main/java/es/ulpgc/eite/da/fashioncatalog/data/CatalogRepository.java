@@ -56,9 +56,12 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     private CatalogRepository(Context context) {
-        this.context = context;
+        // Usamos el contexto de aplicación para evitar fugas de memoria:
+        // este repositorio es un singleton que vive más que cualquier Activity,
+        // así que nunca debe retener un Context de Activity.
+        this.context = context.getApplicationContext();
 
-        database = Room.databaseBuilder(context, CatalogDatabase.class, DB_FILE)
+        database = Room.databaseBuilder(this.context, CatalogDatabase.class, DB_FILE)
                 .fallbackToDestructiveMigration()
                 .build();
 
@@ -75,8 +78,15 @@ public class CatalogRepository implements RepositoryContract {
             public void run() {
                 //En caso que sea necesario limpiar la base de datos
                 if(clearFirst) {
-                    //Limpiamos la base de datos
-                    database.clearAllTables();
+                    //IMPORTANTE: usamos un borrado selectivo en vez de database.clearAllTables(),
+                    //porque clearAllTables() borra TODAS las tablas, incluidas "usuarios" y
+                    //"favoritos". Eso provocaba que cada vez que se entraba en la pantalla de
+                    //Categorías se perdiera el usuario logeado y sus favoritos, y a su vez
+                    //provocaba un FOREIGN KEY constraint failed al intentar marcar un producto
+                    //como favorito justo después (el usuario ya no existía en "usuarios").
+                    //Solo el catálogo (categorías/productos) debe recargarse desde el JSON.
+                    getProductDao().deleteAllProducts();
+                    getCategoryDao().deleteAllCategories();
                 }
                 //Declaramos una variable de tipo boolean para indicar si hay error
                 //al cargar el catalogo a través del JSON
@@ -258,6 +268,38 @@ public class CatalogRepository implements RepositoryContract {
                 List<ProductItem> productsFavorites = getFavoriteDao().getFavoriteProductsByUserId(userId);
                 if (callback != null) {
                     callback.onFavoriteProductsFetched(productsFavorites);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void addFavorite(final int userId, final int productId, final AddFavoriteCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                FavoriteItem favoriteItem = new FavoriteItem();
+                favoriteItem.userId = userId;
+                favoriteItem.productId = productId;
+                getFavoriteDao().insertFavoriteItem(favoriteItem);
+                if (callback != null) {
+                    callback.onFavoriteAdded();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void removeFavorite(final int userId, final int productId, final RemoveFavoriteCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                FavoriteItem favoriteItem = getFavoriteDao().getFavoriteByUserAndProduct(userId, productId);
+                if (favoriteItem != null) {
+                    getFavoriteDao().deleteFavoriteItem(favoriteItem);
+                }
+                if (callback != null) {
+                    callback.onFavoriteRemoved();
                 }
             }
         });

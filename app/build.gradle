@@ -7,7 +7,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "es.ulpgc.eite.da.advmasterdetail"
+        applicationId "es.ulpgc.eite.da.fashioncatalog"
         minSdk 24
         targetSdk 34
         versionCode 1

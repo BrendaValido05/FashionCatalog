@@ -3,6 +3,7 @@ package es.ulpgc.eite.da.fashioncatalog.product;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import es.ulpgc.eite.da.fashioncatalog.R;
 import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
@@ -28,6 +30,7 @@ public class ProductDetailActivity
 
     ProductDetailContract.Presenter presenter;
     private ActionBar actionBar;
+    private FloatingActionButton favouriteButtonFB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +44,17 @@ public class ProductDetailActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        favouriteButtonFB = findViewById(R.id.favouriteButtonFB);
+
         // do the setup
         ProductDetailScreen.configure(this);
+
+        favouriteButtonFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onFavoriteButtonClicked();
+            }
+        });
 
         // do some work
         if(savedInstanceState == null) {
@@ -93,6 +105,23 @@ public class ProductDetailActivity
             );
 
         }
+    }
+
+    @Override
+    public void showFavoriteButton() {
+        favouriteButtonFB.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideFavoriteButton() {
+        favouriteButtonFB.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void updateFavoriteIcon(boolean isFavorite) {
+        favouriteButtonFB.setImageResource(
+                isFavorite ? R.drawable.ic_favorite_border_full : R.drawable.ic_favorite_border_empty
+        );
     }
 
     private void loadImageFromURL(ImageView imageView, String imageUrl){

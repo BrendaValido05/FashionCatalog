@@ -47,6 +47,11 @@
             android:name=".product.ProductDetailActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".favorites.FavoriteListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -52,12 +52,24 @@ public interface RepositoryContract {
     public interface FavoriteItemCallback {
         void onCallback(FavoriteItem favoriteItem);
     }
+    interface AddFavoriteCallback {
+        void onFavoriteAdded();
+    }
+    interface RemoveFavoriteCallback {
+        void onFavoriteRemoved();
+    }
 
     void getFavoriteProductsByUserId(int userId, FetchFavoriteProductsCallback callback);
 
     void isProductFavorite(int userId, int productId, IsProductFavoriteCallback callback);
 
     void getFavoriteByUserAndProduct(int userId, int productId, FavoriteItemCallback callback);
+
+    //Añade el producto a favoritos del usuario indicado
+    void addFavorite(int userId, int productId, AddFavoriteCallback callback);
+
+    //Elimina el producto de favoritos del usuario indicado
+    void removeFavorite(int userId, int productId, RemoveFavoriteCallback callback);
 
 
 

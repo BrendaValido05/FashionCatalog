@@ -16,21 +16,25 @@ import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
 public interface ProductDao {
 
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertProduct(ProductItem product);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertProduct(ProductItem product);
 
-  @Update
-  void updateProduct(ProductItem product);
+    @Update
+    void updateProduct(ProductItem product);
 
-  @Delete
-  void deleteProduct(ProductItem product);
+    @Delete
+    void deleteProduct(ProductItem product);
 
-  @Query("SELECT * FROM products")
-  List<ProductItem> loadProducts();
+    @Query("SELECT * FROM products")
+    List<ProductItem> loadProducts();
 
-  @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
-  ProductItem loadProduct(int id);
+    @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
+    ProductItem loadProduct(int id);
 
-  @Query("SELECT * FROM products WHERE category_id=:categoryId")
-  List<ProductItem> loadProducts(final int categoryId);
+    @Query("SELECT * FROM products WHERE category_id=:categoryId")
+    List<ProductItem> loadProducts(final int categoryId);
+
+    //Borra solo la tabla de productos (sin afectar a usuarios ni favoritos)
+    @Query("DELETE FROM products")
+    void deleteAllProducts();
 }
