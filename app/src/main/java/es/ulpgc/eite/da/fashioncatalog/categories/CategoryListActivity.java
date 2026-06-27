@@ -3,6 +3,8 @@ package es.ulpgc.eite.da.fashioncatalog.categories;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import es.ulpgc.eite.da.fashioncatalog.R;
 import es.ulpgc.eite.da.fashioncatalog.data.CategoryItem;
 import es.ulpgc.eite.da.fashioncatalog.favorites.FavoriteListActivity;
+import es.ulpgc.eite.da.fashioncatalog.login.LoginListActivity;
 import es.ulpgc.eite.da.fashioncatalog.products.ProductListActivity;
 
 public class CategoryListActivity extends AppCompatActivity implements CategoryListContract.View {
@@ -82,7 +85,7 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
 
     @Override
     public void displayCategoryListData(final CategoryListViewModel viewModel) {
-        Log.e(TAG, "displayCategoryListData()");
+        Log.d(TAG, "displayCategoryListData()");
         runOnUiThread(() -> {
             if (listAdapter != null && viewModel != null) {
                 listAdapter.setItems(viewModel.categories);
@@ -119,5 +122,31 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
         if (goTofavouriteButtonFB != null) {
             goTofavouriteButtonFB.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.category_list_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            if (presenter != null) {
+                presenter.logout();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void navigateToLoginScreen() {
+        Intent intent = new Intent(this, LoginListActivity.class);
+        //Limpiamos el back stack: tras hacer Logout no debe poder volverse a Categorías con "atrás"
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

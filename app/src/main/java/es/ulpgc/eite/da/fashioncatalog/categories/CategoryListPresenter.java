@@ -37,13 +37,13 @@ public class CategoryListPresenter implements CategoryListContract.Presenter {
     //Método que llama al modelo
     @Override
     public void fetchCategoryListData() {
-        Log.e(TAG, "fetchCategoryListData()");
+        Log.d(TAG, "fetchCategoryListData()");
         // Recogemos los datos del modelo
         model.fetchCategoryListData(new RepositoryContract.GetCategoryListCallback() {
             // Método para colocar la lista de categorías en el state y colocarlo en la pantalla
             @Override
             public void setCategoryList(List<CategoryItem> categories) {
-                Log.e(TAG, "setCategoryList()");
+                Log.d(TAG, "setCategoryList()");
                 // Asignamos las categorías al state
                 state.categories = categories;
                 // Mostramos la lista de categorías del state en la pantalla
@@ -55,7 +55,7 @@ public class CategoryListPresenter implements CategoryListContract.Presenter {
     }
 
     public void showFavoriteButton() {
-        Log.e(TAG, "showFavoriteButton()");
+        Log.d(TAG, "showFavoriteButton()");
         if (user != null) {
             view.get().showFavoriteButton();
         } else {
@@ -67,12 +67,22 @@ public class CategoryListPresenter implements CategoryListContract.Presenter {
 
     @Override
     public void selectCategoryListData(CategoryItem item) {
-        Log.e(TAG, "selectCategoryListData()");
+        Log.d(TAG, "selectCategoryListData()");
         //Método para pasar los datos a la siguiente pantalla
         passDataToProductListScreen(item);
         //Método para navegar a la siguiente pantalla
         view.get().navigateToProductListScreen();
     }
+
+    //Cierra la sesión del usuario actual (lo limpia del Mediator) y vuelve a Login
+    @Override
+    public void logout() {
+        Log.d(TAG, "logout()");
+        mediator.setUser(null);
+        user = null;
+        view.get().navigateToLoginScreen();
+    }
+
     //Método para pasar los datos a la siguiente pantalla
     private void passDataToProductListScreen(CategoryItem item) {
         //Pasamos los datos a la siguiente pantalla con el mediator

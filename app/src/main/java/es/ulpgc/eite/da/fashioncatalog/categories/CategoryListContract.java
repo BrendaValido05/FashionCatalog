@@ -24,6 +24,9 @@ interface CategoryListContract {
 
         void hideFavoriteButton();
 
+        //Navega de vuelta a la pantalla de Login (usada tras hacer Logout)
+        void navigateToLoginScreen();
+
     }
 
     interface Presenter {
@@ -31,11 +34,13 @@ interface CategoryListContract {
         void injectView(WeakReference<View> view);
         //Método para inyectar el modelo
         void injectModel(Model model);
-        //void injectRouter(Router router);
         //Método para obtener la lista de categorías
         void fetchCategoryListData();
         //Método para seleccionar una categoría
         void selectCategoryListData(CategoryItem item);
+
+        //Cierra la sesión del usuario actual y vuelve a Login
+        void logout();
     }
     interface Model {
         //Método para recoger la lista de categorías

@@ -18,10 +18,12 @@ public class CategoryListModel implements CategoryListContract.Model {
 
     @Override
     public void fetchCategoryListData(final RepositoryContract.GetCategoryListCallback callback) {
-        Log.e(TAG, "fetchCategoryListData()");
-        //Cargamos el catálogo desde el repositorio
+        Log.d(TAG, "fetchCategoryListData()");
+        //Pedimos al repositorio la lista de categorías. El propio repositorio decide
+        //internamente si necesita cargar el catálogo desde el JSON (solo la primera vez)
+        //o si debe leer directamente de Room (en todas las ejecuciones siguientes).
         repository.loadCatalog(
-                true, new RepositoryContract.FetchCatalogDataCallback() {
+                false, new RepositoryContract.FetchCatalogDataCallback() {
                     @Override
                     public void onCatalogDataFetched(boolean error) {
                         //En caso que no haya error

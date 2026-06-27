@@ -17,6 +17,8 @@
     <string name="logInButtonText">INICIAR SESIÓN</string>
     <string name="signUpButtonText">REGISTRARSE</string>
     <string name="GuestButtonText">ENTRAR COMO INVITADO</string>
+    <string name="action_logout">Cerrar sesión</string>
+
 
 
 </resources>

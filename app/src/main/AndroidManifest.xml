@@ -50,8 +50,14 @@
 
         <activity
             android:name=".favorites.FavoriteListActivity"
+            android:parentActivityName=".categories.CategoryListActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".categories.CategoryListActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package es.ulpgc.eite.da.fashioncatalog.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -37,6 +38,12 @@ public class CatalogRepository implements RepositoryContract {
 
     public static final String JSON_ROOT_FAVORITES = "favoritos";
 
+    //Preferencias para saber si el catálogo ya se ha cargado alguna vez desde el JSON.
+    //Esto permite cumplir el requisito de que el JSON solo se lee en la primera ejecución
+    //de la app; en las siguientes ejecuciones los datos se leen exclusivamente de Room.
+    private static final String PREFS_NAME = "catalog_prefs";
+    private static final String KEY_CATALOG_LOADED = "catalog_loaded";
+
     private static CatalogRepository INSTANCE;
 
     //Base de Datos del Catalogo
@@ -45,7 +52,7 @@ public class CatalogRepository implements RepositoryContract {
 
 
     public static RepositoryContract getInstance(Context context) {
-        Log.e(TAG, "getInstance()");
+        Log.d(TAG, "getInstance()");
         //En caso que sea null
         if(INSTANCE == null){
             //Creamos una nueva instancia
@@ -68,6 +75,11 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     //Implementamos el metodo que carga el catalogo
+    //IMPORTANTE: el parámetro "clearFirst" se mantiene en la firma por compatibilidad con el
+    //Contract, pero la decisión real de si se debe (re)cargar el JSON ya NO depende de él ni
+    //de si la tabla está vacía en ese instante: depende de si el catálogo ya se cargó alguna
+    //vez en esta instalación (flag persistido en SharedPreferences). Así, el JSON se lee
+    //únicamente la primera ejecución; en las siguientes, los datos se leen solo de Room.
     @Override
     public void loadCatalog(
             final boolean clearFirst, final FetchCatalogDataCallback callback) {
@@ -76,33 +88,23 @@ public class CatalogRepository implements RepositoryContract {
 
             @Override
             public void run() {
-                //En caso que sea necesario limpiar la base de datos
-                if(clearFirst) {
-                    //IMPORTANTE: usamos un borrado selectivo en vez de database.clearAllTables(),
-                    //porque clearAllTables() borra TODAS las tablas, incluidas "usuarios" y
-                    //"favoritos". Eso provocaba que cada vez que se entraba en la pantalla de
-                    //Categorías se perdiera el usuario logeado y sus favoritos, y a su vez
-                    //provocaba un FOREIGN KEY constraint failed al intentar marcar un producto
-                    //como favorito justo después (el usuario ya no existía en "usuarios").
-                    //Solo el catálogo (categorías/productos) debe recargarse desde el JSON.
-                    getProductDao().deleteAllProducts();
-                    getCategoryDao().deleteAllCategories();
-                }
-                //Declaramos una variable de tipo boolean para indicar si hay error
-                //al cargar el catalogo a través del JSON
                 boolean error = false;
-                //Utilizamos como condicional si la lista de categorias esta vacia
-                if(getCategoryDao().loadCategories().size() == 0 ) {
-                    //Cambiamos el valor del boolean error dependiendo si se cargo correctamente
-                    //el catalogo desde el JSON siendo el contrario de cargar el JSON
+
+                if (!isCatalogAlreadyLoaded()) {
+                    Log.d(TAG, "loadCatalog() -> primera ejecución, cargando catálogo desde JSON");
                     error = !loadCatalogFromJSON(loadJSONFromAsset(JSON_FILE));
+                    if (!error) {
+                        markCatalogAsLoaded();
+                    }
+                } else {
+                    Log.d(TAG, "loadCatalog() -> catálogo ya cargado anteriormente, se usa Room");
                 }
                 //IMPORTANTE: los usuarios NO se siembran desde JSON. Los usuarios se crean
                 //exclusivamente a través de la pantalla de Registro y se persisten en Room (UserDao).
                 //En caso que no haya error al cargar el catalogo  de manera asíncrona
                 if(callback != null) {
-                    //? ¿Cómo funciona exactamente este método dependiendo del error?
                     //Cargamos el catalogo con un método del callback, como variable el boolean
+
                     //error que indica si se cargo correctamente el catalogo
                     callback.onCatalogDataFetched(error);
                 }
@@ -359,6 +361,20 @@ public class CatalogRepository implements RepositoryContract {
         return database.categoryDao();
     }
 
+    //Comprueba si el catálogo ya se cargó alguna vez desde el JSON en esta instalación
+    private boolean isCatalogAlreadyLoaded() {
+        return getPrefs().getBoolean(KEY_CATALOG_LOADED, false);
+    }
+
+    //Marca el catálogo como cargado para que no se vuelva a leer el JSON en próximas ejecuciones
+    private void markCatalogAsLoaded() {
+        getPrefs().edit().putBoolean(KEY_CATALOG_LOADED, true).apply();
+    }
+
+    private SharedPreferences getPrefs() {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
     private UserDao getUserDao() {
         return database.userDao();
     }
@@ -396,7 +412,7 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     private boolean loadCatalogFromJSON(String json) {
-        Log.e(TAG, "loadCatalogFromJSON()");
+        Log.d(TAG, "loadCatalogFromJSON()");
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
@@ -436,7 +452,6 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     private String loadJSONFromAsset(String fileName) {
-        //Log.e(TAG, "loadJSONFromAsset()");
 
         String json = null;
 
