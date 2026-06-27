@@ -36,4 +36,9 @@ public class CategoryListModel implements CategoryListContract.Model {
 
     }
 
+    @Override
+    public void clearSession() {
+        repository.clearSessionUserId();
+    }
+
 }

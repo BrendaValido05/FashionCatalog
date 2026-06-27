@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -122,6 +123,17 @@ public class ProductDetailActivity
         favouriteButtonFB.setImageResource(
                 isFavorite ? R.drawable.ic_favorite_border_full : R.drawable.ic_favorite_border_empty
         );
+    }
+
+    @Override
+    public void showGuestFavoriteError() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ProductDetailActivity.this,
+                        "Debes iniciar sesión para marcar favoritos", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void loadImageFromURL(ImageView imageView, String imageUrl){

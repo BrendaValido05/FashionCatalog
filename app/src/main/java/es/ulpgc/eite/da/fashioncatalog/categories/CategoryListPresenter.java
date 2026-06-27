@@ -74,12 +74,14 @@ public class CategoryListPresenter implements CategoryListContract.Presenter {
         view.get().navigateToProductListScreen();
     }
 
-    //Cierra la sesión del usuario actual (lo limpia del Mediator) y vuelve a Login
+    //Cierra la sesión del usuario actual: la limpia del Mediator (memoria) y de
+    //SharedPreferences (persistencia), y vuelve a Login
     @Override
     public void logout() {
         Log.d(TAG, "logout()");
         mediator.setUser(null);
         user = null;
+        model.clearSession();
         view.get().navigateToLoginScreen();
     }
 

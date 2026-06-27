@@ -23,8 +23,6 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
 
     public ProductDetailPresenter(CatalogMediator mediator) {
         this.mediator = mediator;
-        //Recogemos el usuario de la pantalla anterior; si es null, se ha entrado como invitado
-        this.user = mediator.getUser();
     }
 
     @Override
@@ -32,6 +30,9 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
         // Log.e(TAG, "onCreateCalled");
 
         state = new ProductDetailState();
+        //Releemos el usuario del mediator en cada creación: puede haber cambiado
+        //(login/logout) desde que se construyó este Presenter
+        this.user = mediator.getUser();
     }
 
     @Override
@@ -39,6 +40,7 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
         // Log.e(TAG, "onRecreateCalled");
 
         state = mediator.getProductDetailState();
+        this.user = mediator.getUser();
     }
 
     @Override
@@ -101,7 +103,17 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
 
     @Override
     public void onFavoriteButtonClicked() {
-        if (user == null || state.product == null) {
+        ProductDetailContract.View safeView = view.get();
+
+        if (user == null) {
+            //Defensa adicional: un invitado no puede marcar/desmarcar favoritos
+            if (safeView != null) {
+                safeView.showGuestFavoriteError();
+            }
+            return;
+        }
+
+        if (state.product == null) {
             return;
         }
 

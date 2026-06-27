@@ -18,6 +18,10 @@ interface ProductDetailContract {
 
         //Actualiza el icono del botón según si el producto es favorito o no
         void updateFavoriteIcon(boolean isFavorite);
+
+        //Mensaje mostrado si un invitado intenta marcar/desmarcar favorito
+        //(defensa adicional por si el botón llegara a ser visible/clicable sin sesión)
+        void showGuestFavoriteError();
     }
 
     interface Presenter {

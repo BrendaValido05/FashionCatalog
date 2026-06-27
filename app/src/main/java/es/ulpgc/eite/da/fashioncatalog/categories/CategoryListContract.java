@@ -46,6 +46,9 @@ interface CategoryListContract {
         //Método para recoger la lista de categorías
         void fetchCategoryListData(
                 RepositoryContract.GetCategoryListCallback callback);
+
+        //Elimina la sesión persistida (usado en logout)
+        void clearSession();
     }
 
 

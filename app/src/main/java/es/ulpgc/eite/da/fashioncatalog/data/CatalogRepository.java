@@ -44,6 +44,10 @@ public class CatalogRepository implements RepositoryContract {
     private static final String PREFS_NAME = "catalog_prefs";
     private static final String KEY_CATALOG_LOADED = "catalog_loaded";
 
+    //Clave usada para persistir el id del usuario logueado entre ejecuciones de la app
+    private static final String KEY_SESSION_USER_ID = "session_user_id";
+    private static final int NO_SESSION = -1;
+
     private static CatalogRepository INSTANCE;
 
     //Base de Datos del Catalogo
@@ -409,6 +413,25 @@ public class CatalogRepository implements RepositoryContract {
                 }
             }
         });
+    }
+
+    //Persistencia de sesión
+    //Se guarda en las mismas SharedPreferences que el flag de carga del catálogo.
+    //No usamos la BD para esto porque es un dato  de "estado de la app",
+    //no un dato de catálogo, y así sobrevive a un fallbackToDestructiveMigration().
+    @Override
+    public void saveSessionUserId(int userId) {
+        getPrefs().edit().putInt(KEY_SESSION_USER_ID, userId).apply();
+    }
+
+    @Override
+    public int getSessionUserId() {
+        return getPrefs().getInt(KEY_SESSION_USER_ID, NO_SESSION);
+    }
+
+    @Override
+    public void clearSessionUserId() {
+        getPrefs().edit().remove(KEY_SESSION_USER_ID).apply();
     }
 
     private boolean loadCatalogFromJSON(String json) {
