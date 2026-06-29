@@ -48,6 +48,7 @@ dependencies {
     implementation libs.glide
     annotationProcessor libs.compiler
     implementation libs.gson
+    implementation libs.androidx.espresso.idling.resource
 
     testImplementation libs.junit
     testImplementation libs.robolectric
@@ -61,4 +62,5 @@ dependencies {
     androidTestImplementation libs.runner
     androidTestImplementation libs.rules
     androidTestImplementation libs.androidx.espresso.contrib
+
 }

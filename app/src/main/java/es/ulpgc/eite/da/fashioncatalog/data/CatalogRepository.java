@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.room.Room;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,6 +51,12 @@ public class CatalogRepository implements RepositoryContract {
 
     private static CatalogRepository INSTANCE;
 
+    //Idling resource usado por los tests de Espresso para esperar a que terminen las
+    //tareas en background lanzadas por el repositorio (AsyncTask) antes de comprobar la UI.
+    //En producción permanece siempre "idle" y no tiene ningún efecto sobre el comportamiento de la app.
+    public static final CountingIdlingResource IDLING_RESOURCE =
+            new CountingIdlingResource("CatalogRepository");
+
     //Base de Datos del Catalogo
     private CatalogDatabase database;
     private Context context;
@@ -64,6 +71,11 @@ public class CatalogRepository implements RepositoryContract {
         }
         //Retornamos la instancia
         return INSTANCE;
+    }
+    //Permite a los tests forzar la creación de una nueva instancia (por ejemplo tras
+    //cerrar la base de datos en un test de Robolectric) sin afectar a los datos persistidos.
+    public static void resetInstance() {
+        INSTANCE = null;
     }
 
     private CatalogRepository(Context context) {
