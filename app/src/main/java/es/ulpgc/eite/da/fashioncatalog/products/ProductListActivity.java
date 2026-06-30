@@ -38,6 +38,11 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         goTofavouriteButtonFB = findViewById(R.id.goTofavouriteButtonFB);
+        if (goTofavouriteButtonFB != null) {
+            goTofavouriteButtonFB.setOnClickListener(v ->
+                    navigateToFavoriteListScreen()
+            );
+        }
 
         actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -72,6 +77,13 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         Log.e(TAG, "navigateToProductDetailScreen()");
         Intent intent = new Intent(this, ProductDetailActivity.class);
         //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void navigateToFavoriteListScreen() {
+        Log.e(TAG, "navigateToFavoriteListScreen()");
+        Intent intent = new Intent(this, es.ulpgc.eite.da.fashioncatalog.favorites.FavoriteListActivity.class);
         startActivity(intent);
     }
 

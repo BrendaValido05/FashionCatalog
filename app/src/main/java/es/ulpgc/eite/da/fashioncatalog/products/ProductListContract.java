@@ -18,6 +18,8 @@ interface ProductListContract {
 
         void navigateToProductDetailScreen();
 
+        void navigateToFavoriteListScreen();
+
         void showFavoriteButton();
     }
     //Métodos del presenter

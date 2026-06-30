@@ -30,34 +30,30 @@ public class EspressoTests {
 
     public EspressoTestSteps testSteps = new EspressoTestSteps();
 
+    // ActivityTestRule lanza LoginListActivity (y por tanto ejecuta su onCreate,
+    // que ya hace CatalogMediator.getInstance()) ANTES de que se ejecuten los métodos @Before.
+    // Por eso CatalogMediator.resetInstance() / CatalogRepository.resetInstance() NUNCA deben
+    // llamarse en un @Before: si se hiciera, la Activity ya lanzada se quedaría con una
+    // instancia "vieja" del mediator (donde LoginListPresenter guarda el usuario al hacer
+    // login), mientras que cualquier pantalla posterior (p.ej. CategoryListActivity tras el
+    // login) pediría CatalogMediator.getInstance() de nuevo y, al estar la INSTANCE a null,
+    // crearía una instancia "nueva" sin usuario. Resultado: mediator.getUser() devuelve null
+    // en CategoryListPresenter aunque el login haya sido correcto, y el FAB de favoritos
+    // nunca se muestra. El reset solo es seguro en @After, una vez terminado el test y antes
+    // de que ActivityTestRule lance la Activity del siguiente test.
     @Before
-    public void registerIdlingResource() throws InterruptedException {
+    public void setUp() throws InterruptedException {
         IdlingRegistry.getInstance().register(CatalogRepository.IDLING_RESOURCE);
+
+        // Limpieza explícita antes de cada test (no toca los singletons CatalogMediator/CatalogRepository)
+        testSteps.clearSession();
+
         // Aseguramos que el usuario de prueba existe en BD antes de cada test de login
         testSteps.seedTestUser();
     }
 
     @After
-    public void unregisterIdlingResource() {
-        testSteps.resetearTest();
-        IdlingRegistry.getInstance().unregister(CatalogRepository.IDLING_RESOURCE);
-    }
-
-    @Before
-    public void setUp() throws InterruptedException {
-        IdlingRegistry.getInstance().register(CatalogRepository.IDLING_RESOURCE);
-
-        // Limpieza explícita antes de cada test
-        testSteps.clearSession();
-        testSteps.resetearTest();           // por si acaso
-
-        // Seed del usuario de prueba
-        testSteps.seedTestUser();
-    }
-
-    @After
     public void tearDown() {
-        testSteps.clearSession();
         testSteps.resetearTest();
         IdlingRegistry.getInstance().unregister(CatalogRepository.IDLING_RESOURCE);
     }
