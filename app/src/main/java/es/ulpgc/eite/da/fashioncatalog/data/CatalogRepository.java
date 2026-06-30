@@ -324,6 +324,19 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     @Override
+    public void clearFavoritesForUser(final int userId, final ClearFavoritesCallback callback) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                getFavoriteDao().deleteFavoritesByUserId(userId);
+                if (callback != null) {
+                    callback.onFavoritesCleared();
+                }
+            }
+        });
+    }
+
+    @Override
     public void updateProduct(
             final ProductItem product, final UpdateProductCallback callback) {
 

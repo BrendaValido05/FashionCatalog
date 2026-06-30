@@ -58,6 +58,9 @@ public interface RepositoryContract {
     interface RemoveFavoriteCallback {
         void onFavoriteRemoved();
     }
+    interface ClearFavoritesCallback {
+        void onFavoritesCleared();
+    }
 
     void getFavoriteProductsByUserId(int userId, FetchFavoriteProductsCallback callback);
 
@@ -70,6 +73,10 @@ public interface RepositoryContract {
 
     //Elimina el producto de favoritos del usuario indicado
     void removeFavorite(int userId, int productId, RemoveFavoriteCallback callback);
+
+    //Elimina todos los favoritos del usuario indicado (usado por los tests para partir
+    //de un estado conocido, ya que la base de datos persiste entre ejecuciones de test)
+    void clearFavoritesForUser(int userId, ClearFavoritesCallback callback);
 
 
 

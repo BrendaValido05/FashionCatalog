@@ -30,7 +30,7 @@ public class EspressoTests {
 
     public EspressoTestSteps testSteps = new EspressoTestSteps();
 
-    // ActivityTestRule lanza LoginListActivity (y por tanto ejecuta su onCreate,
+    // IMPORTANTE: ActivityTestRule lanza LoginListActivity (y por tanto ejecuta su onCreate,
     // que ya hace CatalogMediator.getInstance()) ANTES de que se ejecuten los métodos @Before.
     // Por eso CatalogMediator.resetInstance() / CatalogRepository.resetInstance() NUNCA deben
     // llamarse en un @Before: si se hiciera, la Activity ya lanzada se quedaría con una
@@ -50,6 +50,11 @@ public class EspressoTests {
 
         // Aseguramos que el usuario de prueba existe en BD antes de cada test de login
         testSteps.seedTestUser();
+
+        // Dejamos al usuario de prueba sin favoritos: la BD persiste entre tests
+        // (solo se limpia la sesión), así que sin esto un favorito marcado en un test
+        // anterior contaminaría los tests posteriores que tocan el mismo producto.
+        testSteps.clearFavorites();
     }
 
     @After
@@ -197,7 +202,7 @@ public class EspressoTests {
         testSteps.mostramosListaDeFavoritos();
 
         // Then puede acceder al detalle del producto favorito desde esa lista
-        testSteps.pulsamosBotonEnListaDeProductosEnPosicion("0");
+        testSteps.pulsamosBotonEnListaDeFavoritosEnPosicion("0");
         testSteps.mostramosDetalleDeProducto();
     }
 

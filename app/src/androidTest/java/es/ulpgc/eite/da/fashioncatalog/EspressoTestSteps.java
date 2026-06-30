@@ -7,6 +7,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.util.Log;
 
@@ -41,6 +42,27 @@ public class EspressoTestSteps {
 
         final CountDownLatch latch = new CountDownLatch(1);
         repository.registerUser(user, (success, duplicateEmail) -> latch.countDown());
+        latch.await(5, TimeUnit.SECONDS);
+    }
+
+    // catalog.db NO se recrea entre tests (solo se limpia la sesión de SharedPreferences),
+    // así que un favorito marcado en un test (p.ej. test09) sigue ahí en los siguientes
+    // (p.ej. test11) y un click sobre el mismo producto lo desmarcaría en vez de marcarlo.
+    // Por eso dejamos sin favoritos al usuario de prueba antes de cada test.
+    public void clearFavorites() throws InterruptedException {
+        RepositoryContract repository = CatalogRepository.getInstance(
+                ApplicationProvider.getApplicationContext());
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        repository.getUserList(users -> {
+            for (UserItem u : users) {
+                if (TEST_EMAIL.equals(u.email)) {
+                    repository.clearFavoritesForUser(u.id, latch::countDown);
+                    return;
+                }
+            }
+            latch.countDown();
+        });
         latch.await(5, TimeUnit.SECONDS);
     }
 
@@ -138,14 +160,26 @@ public class EspressoTestSteps {
         onView(withId(R.id.favorite_list)).check(matches(isDisplayed()));
     }
 
+    // Distinto de pulsamosBotonEnListaDeProductosEnPosicion(): la pantalla de Favoritos
+    // usa su propio RecyclerView (R.id.favorite_list), no R.id.product_list.
+    public void pulsamosBotonEnListaDeFavoritosEnPosicion(String pos) {
+        int position = Integer.parseInt(pos);
+        onView(withId(R.id.favorite_list))
+                .perform(actionOnItemAtPosition(position, click()));
+    }
+
     public void pulsamosLogout() {
-        // Abre el menú de opciones (por si el item aparece en el overflow) y pulsa logout
+        // Abre el menú de opciones (por si el item aparece en el overflow) y pulsa logout.
+        // IMPORTANTE: los items mostrados dentro del popup de overflow de AppCompat no llevan
+        // el id del MenuItem (R.id.action_logout) en ninguna vista de su jerarquía -- solo lo
+        // llevan los items que se muestran directamente en la Toolbar. Por eso hay que
+        // localizarlo por su texto, no por withId().
         try {
             androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu(
                     ApplicationProvider.getApplicationContext());
         } catch (Exception ignored) {
         }
-        onView(withId(R.id.action_logout)).perform(click());
+        onView(withText(R.string.action_logout)).perform(click());
     }
 
     public void clearSession() {
