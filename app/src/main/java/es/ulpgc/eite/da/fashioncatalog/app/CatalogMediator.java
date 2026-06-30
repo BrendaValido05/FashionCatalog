@@ -71,8 +71,7 @@ public class CatalogMediator {
 
 
     public UserItem getUser() {
-        UserItem item = user;
-        return item;
+        return user;   // sin copia innecesaria
     }
 
     public void setUser(UserItem item) {

@@ -8,6 +8,8 @@ import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtP
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
+import android.util.Log;
+
 import androidx.test.core.app.ApplicationProvider;
 
 import java.util.concurrent.CountDownLatch;
@@ -146,8 +148,22 @@ public class EspressoTestSteps {
         onView(withId(R.id.action_logout)).perform(click());
     }
 
+    public void clearSession() {
+        try {
+            RepositoryContract repo = CatalogRepository.getInstance(
+                    ApplicationProvider.getApplicationContext());
+            repo.clearSessionUserId();
+        } catch (Exception e) {
+            Log.e("EspressoTestSteps", "Error clearing session", e);
+        }
+    }
+
+    // Actualiza resetearTest()
     public void resetearTest() {
         CatalogMediator.resetInstance();
         CatalogRepository.resetInstance();
+
+
+        clearSession();   // Limpia la sesión persistida en SharedPreferences
     }
 }

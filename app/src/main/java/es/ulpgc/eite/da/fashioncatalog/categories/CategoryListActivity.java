@@ -80,6 +80,15 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
         // Cargar datos
         if (presenter != null) {
             presenter.fetchCategoryListData();
+            presenter.showFavoriteButton();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (presenter != null) {
+            presenter.showFavoriteButton();
         }
     }
 

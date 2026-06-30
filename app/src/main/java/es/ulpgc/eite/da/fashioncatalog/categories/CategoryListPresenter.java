@@ -32,31 +32,33 @@ public class CategoryListPresenter implements CategoryListContract.Presenter {
         //Decimos que el state provenga del mediator
         state = mediator.getCategoryListState();
         //Recogemos el usuario de la pantalla login, indicando que se ha logeado correctamente
-        user = mediator.getUser();
+        //user = mediator.getUser();
     }
-    //Método que llama al modelo
+
+
     @Override
     public void fetchCategoryListData() {
         Log.d(TAG, "fetchCategoryListData()");
-        // Recogemos los datos del modelo
+
         model.fetchCategoryListData(new RepositoryContract.GetCategoryListCallback() {
-            // Método para colocar la lista de categorías en el state y colocarlo en la pantalla
             @Override
             public void setCategoryList(List<CategoryItem> categories) {
                 Log.d(TAG, "setCategoryList()");
-                // Asignamos las categorías al state
                 state.categories = categories;
-                // Mostramos la lista de categorías del state en la pantalla
                 view.get().displayCategoryListData(state);
             }
         });
-        // Ocultamos el botón de favoritos si el usuario es nulo
+
+        // usar el usuario actual del mediator
         showFavoriteButton();
     }
 
     public void showFavoriteButton() {
-        Log.d(TAG, "showFavoriteButton()");
-        if (user != null) {
+        UserItem currentUser = mediator.getUser();
+        Log.d(TAG, "showFavoriteButton() - User from mediator: " +
+                (currentUser != null ? currentUser.email : "null"));
+
+        if (currentUser != null) {
             view.get().showFavoriteButton();
         } else {
             view.get().hideFavoriteButton();

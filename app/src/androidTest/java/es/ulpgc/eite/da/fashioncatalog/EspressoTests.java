@@ -43,6 +43,25 @@ public class EspressoTests {
         IdlingRegistry.getInstance().unregister(CatalogRepository.IDLING_RESOURCE);
     }
 
+    @Before
+    public void setUp() throws InterruptedException {
+        IdlingRegistry.getInstance().register(CatalogRepository.IDLING_RESOURCE);
+
+        // Limpieza explícita antes de cada test
+        testSteps.clearSession();
+        testSteps.resetearTest();           // por si acaso
+
+        // Seed del usuario de prueba
+        testSteps.seedTestUser();
+    }
+
+    @After
+    public void tearDown() {
+        testSteps.clearSession();
+        testSteps.resetearTest();
+        IdlingRegistry.getInstance().unregister(CatalogRepository.IDLING_RESOURCE);
+    }
+
     @Test
     public void test01MuestraPantallaDeLogin() {
         // Then la pantalla de login se muestra al arrancar la app

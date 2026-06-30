@@ -3,6 +3,7 @@ package es.ulpgc.eite.da.fashioncatalog.login;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import android.util.Log;
 import android.util.Patterns;
 
 import es.ulpgc.eite.da.fashioncatalog.app.CatalogMediator;
@@ -61,13 +62,19 @@ public class LoginListPresenter implements LoginListContract.Presenter {
             @Override
             public void setUserList(List<UserItem> users) {
                 boolean found = false;
-                for (UserItem user : users) {
-                    if (user.email.equals(email) && user.password.equals(password)) {
+                for (UserItem userItem : users) {
+                    if (userItem.email.equals(email) && userItem.password.equals(password)) {
                         found = true;
-                        mediator.setUser(user);
-                        //Persistimos la sesión para que sobreviva al cierre de la app
-                        model.saveSessionUserId(user.id);
-                        view.get().navigateToCategoryListScreen();
+                        mediator.setUser(userItem);
+                        model.saveSessionUserId(userItem.id);
+
+                        Log.d(TAG, "Login exitoso - Usuario guardado en mediator: " + userItem.email);
+
+                        // Pequeño delay para asegurar que el mediator se actualice antes de navegar
+                        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                            view.get().navigateToCategoryListScreen();
+                        }, 150);
+
                         break;
                     }
                 }
@@ -75,11 +82,8 @@ public class LoginListPresenter implements LoginListContract.Presenter {
                 if (!found) {
                     view.get().showLoginError();
                 }
-
             }
         });
-
-
     }
 
     @Override

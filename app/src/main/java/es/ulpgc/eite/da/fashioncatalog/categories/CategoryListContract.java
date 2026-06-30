@@ -41,6 +41,7 @@ interface CategoryListContract {
 
         //Cierra la sesión del usuario actual y vuelve a Login
         void logout();
+        void showFavoriteButton();
     }
     interface Model {
         //Método para recoger la lista de categorías
