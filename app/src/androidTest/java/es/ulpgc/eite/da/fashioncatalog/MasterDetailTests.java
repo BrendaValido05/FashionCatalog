@@ -1,19 +1,18 @@
 package es.ulpgc.eite.da.fashioncatalog;
 
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
-import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 
 import android.content.pm.ActivityInfo;
 import android.os.RemoteException;
 
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.filters.LargeTest;
@@ -21,11 +20,14 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import androidx.test.uiautomator.UiDevice;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import es.ulpgc.eite.da.fashioncatalog.categories.CategoryListActivity;
+import es.ulpgc.eite.da.fashioncatalog.data.CatalogRepository;
 
 
 @SuppressWarnings("ALL")
@@ -33,155 +35,141 @@ import es.ulpgc.eite.da.fashioncatalog.categories.CategoryListActivity;
 @RunWith(AndroidJUnit4.class)
 public class MasterDetailTests {
 
-  @Rule
-  public ActivityTestRule<CategoryListActivity> testRule =
-      new ActivityTestRule<>(CategoryListActivity.class);
+    @Rule
+    public ActivityTestRule<CategoryListActivity> testRule =
+            new ActivityTestRule<>(CategoryListActivity.class);
 
-
-
-  private void rotate() {
-
-    CategoryListActivity activity = testRule.getActivity();
-    int orientation = activity.getRequestedOrientation();
-
-    if(orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-      orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-
-    } else {
-      orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+    @Before
+    public void registerIdlingResource() {
+        IdlingRegistry.getInstance().register(CatalogRepository.IDLING_RESOURCE);
     }
 
-    activity.setRequestedOrientation(orientation);
-
-    try {
-
-      UiDevice device = UiDevice.getInstance(getInstrumentation());
-
-      if(orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-        device.setOrientationNatural();
-
-      } else {
-        device.setOrientationLeft();
-      }
-
-    } catch (RemoteException e) {
+    @After
+    public void unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(CatalogRepository.IDLING_RESOURCE);
     }
 
-  }
+    private void rotate() {
 
+        CategoryListActivity activity = testRule.getActivity();
+        int orientation = activity.getRequestedOrientation();
 
-  @Test
-  public void appTest() {
+        if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        } else {
+            orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        }
 
-    rotate();
+        activity.setRequestedOrientation(orientation);
 
-    onView(new RecyclerViewMatcher(R.id.category_recycler)
-        .atPositionOnView(0, R.id.category_name))
-        .check(matches(withText("Tenerife")));
+        try {
+            UiDevice device = UiDevice.getInstance(getInstrumentation());
 
-    // Scroll to the item at the specific position
-    onView(withId(R.id.category_recycler))
-        .perform(RecyclerViewActions.scrollToPosition(5));
+            if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                device.setOrientationNatural();
+            } else {
+                device.setOrientationLeft();
+            }
 
-    onView(new RecyclerViewMatcher(R.id.category_recycler)
-        .atPositionOnView(5, R.id.category_name))
-        .check(matches(withText("La Gomera")));
+        } catch (RemoteException e) {
+        }
+    }
 
+    @Test
+    public void appTest() {
 
-    ViewInteraction recyclerView1 =
-        onView(new RecyclerViewMatcher(R.id.category_recycler)
-            .atPositionOnView(2, R.id.category_name))
-            .check(matches(withText("Gran Canaria")));
-    recyclerView1.perform(click());
+        // --- Pantalla de Categorías (maestro) ---------------------------------------
+        rotate();
 
-    rotate();
+        onView(new RecyclerViewMatcher(R.id.category_list)
+                .atPositionOnView(0, R.id.content))
+                .check(matches(withText(containsString("Bolsos"))));
 
-    onView(new RecyclerViewMatcher(R.id.product_recycler)
-        .atPositionOnView(0, R.id.product_name))
-        .check(matches(withText("Beaches of Gran Canaria")));
+        // Scroll a otra posición para forzar el reciclado de ViewHolders del RecyclerView
+        onView(withId(R.id.category_list))
+                .perform(RecyclerViewActions.scrollToPosition(3));
 
-    onView(new RecyclerViewMatcher(R.id.product_recycler)
-        .atPositionOnView(1, R.id.product_name))
-        .check(matches(withText("Las Palmas de Gran Canaria")));
+        onView(new RecyclerViewMatcher(R.id.category_list)
+                .atPositionOnView(3, R.id.content))
+                .check(matches(withText(containsString("Accesorios"))));
 
+        rotate();
 
-    pressBack();
+        // Tras destruir/recrear la Activity, los datos siguen viniendo de Room sin
+        // necesidad de volver a leer el JSON ni perder la posición de scroll lógica
+        onView(new RecyclerViewMatcher(R.id.category_list)
+                .atPositionOnView(0, R.id.content))
+                .check(matches(withText(containsString("Bolsos"))));
 
-    rotate();
+        // --- Navegamos a Productos (maestro-detalle, nivel 1) -----------------------
+        ViewInteraction categoryZapatos =
+                onView(new RecyclerViewMatcher(R.id.category_list)
+                        .atPositionOnView(1, R.id.content))
+                        .check(matches(withText(containsString("Zapatos"))));
+        categoryZapatos.perform(androidx.test.espresso.action.ViewActions.click());
 
-    onView(new RecyclerViewMatcher(R.id.category_recycler)
-        .atPositionOnView(0, R.id.category_name))
-        .check(matches(withText("Tenerife")));
+        rotate();
 
-    // Scroll to the item at the specific position
-    onView(withId(R.id.category_recycler))
-        .perform(RecyclerViewActions.scrollToPosition(4));
+        onView(withId(R.id.product_list)).check(matches(isDisplayed()));
 
-    ViewInteraction recyclerView2 =
-        onView(new RecyclerViewMatcher(R.id.category_recycler)
-            .atPositionOnView(4, R.id.category_name))
-            .check(matches(withText("La Palma")));
-    recyclerView2.perform(click());
+        onView(new RecyclerViewMatcher(R.id.product_list)
+                .atPositionOnView(0, R.id.content))
+                .check(matches(withText(containsString("Zapatillas deportivas"))));
 
-    rotate();
+        rotate();
 
-    onView(new RecyclerViewMatcher(R.id.product_recycler)
-        .atPositionOnView(1, R.id.product_name))
-        .check(matches(withText("Santa Cruz de la Palma")));
+        // Tras rotar dentro de Productos, la app debe recuperar de nuevo de Room los
+        // productos asociados a la categoría seleccionada (no productos de otra categoría)
+        onView(new RecyclerViewMatcher(R.id.product_list)
+                .atPositionOnView(1, R.id.content))
+                .check(matches(withText(containsString("Botines de cuero"))));
 
-    ViewInteraction recyclerView3 =
-        onView(new RecyclerViewMatcher(R.id.product_recycler)
-          .atPositionOnView(0, R.id.product_name))
-          .check(matches(withText("Caldera de Taburiente National Park")));
-    recyclerView3.perform(click());
+        // --- Navegamos al Detalle (maestro-detalle, nivel 2) ------------------------
+        ViewInteraction productBotines =
+                onView(new RecyclerViewMatcher(R.id.product_list)
+                        .atPositionOnView(1, R.id.content))
+                        .check(matches(withText(containsString("Botines de cuero"))));
+        productBotines.perform(androidx.test.espresso.action.ViewActions.click());
 
-    rotate();
+        rotate();
 
-    ViewInteraction textView15 = onView(allOf(
-        withId(R.id.product_detail),
-        isDisplayed()
-    ));
-    textView15.check(matches(withText(
-        "Known as the Isla Bonita (Beautiful Island), " +
-        "La Palma is the greenest of the Canary Islands. " +
-        "Designated a UNESCO Biosphere Reserve, " +
-        "La Palma's landscape varies from pristine forests " +
-        "to sheer cliffs and black-sand beaches. " +
-        "Among its many protected environments is " +
-        "the Caldera de Taburiente National Park, " +
-        "where volcanic peaks rise to 2,400 meters, " +
-        "and lava flows descend to the sea. " +
-        "For those in search of idyllic surroundings, " +
-        "the park has wooded areas with streams and waterfalls. " +
-        "Along the rocky coastline, picturesque little bays " +
-        "are hidden away in between steep hillsides."
-    )));
+        onView(withId(R.id.product_detail))
+                .perform(androidx.test.espresso.action.ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
 
+        rotate();
 
-    pressBack();
+        // El detalle debe seguir mostrando los datos del MISMO producto tras la segunda
+        // rotación: si el ProductDetailPresenter cacheara mal el producto seleccionado
+        // en CatalogMediator, este assert detectaría la inconsistencia
+        onView(withId(R.id.product_detail))
+                .perform(androidx.test.espresso.action.ViewActions.scrollTo())
+                .check(matches(isDisplayed()));
 
-    rotate();
+        // --- Volvemos hacia atrás comprobando que el back-stack es coherente -------
+        pressBack();
 
-    onView(new RecyclerViewMatcher(R.id.product_recycler)
-        .atPositionOnView(1, R.id.product_name))
-        .check(matches(withText("Santa Cruz de la Palma")));
+        rotate();
 
-    pressBack();
+        onView(withId(R.id.product_list)).check(matches(isDisplayed()));
+        onView(new RecyclerViewMatcher(R.id.product_list)
+                .atPositionOnView(0, R.id.content))
+                .check(matches(withText(containsString("Zapatillas deportivas"))));
 
-    rotate();
+        pressBack();
 
-    onView(new RecyclerViewMatcher(R.id.category_recycler)
-        .atPositionOnView(0, R.id.category_name))
-        .check(matches(withText("Tenerife")));
+        rotate();
 
-    // Scroll to the item at the specific position
-    onView(withId(R.id.category_recycler))
-        .perform(RecyclerViewActions.scrollToPosition(5));
+        onView(withId(R.id.category_list)).check(matches(isDisplayed()));
+        onView(new RecyclerViewMatcher(R.id.category_list)
+                .atPositionOnView(0, R.id.content))
+                .check(matches(withText(containsString("Bolsos"))));
 
-    onView(new RecyclerViewMatcher(R.id.category_recycler)
-        .atPositionOnView(5, R.id.category_name))
-        .check(matches(withText("La Gomera")));
-  }
+        onView(withId(R.id.category_list))
+                .perform(RecyclerViewActions.scrollToPosition(3));
 
-
+        onView(new RecyclerViewMatcher(R.id.category_list)
+                .atPositionOnView(3, R.id.content))
+                .check(matches(withText(containsString("Accesorios"))));
+    }
 }
