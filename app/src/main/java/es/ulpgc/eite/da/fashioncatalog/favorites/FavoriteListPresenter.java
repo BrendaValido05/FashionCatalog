@@ -11,44 +11,34 @@ import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
 import es.ulpgc.eite.da.fashioncatalog.data.RepositoryContract;
 import es.ulpgc.eite.da.fashioncatalog.data.UserItem;
 
-// Presenter del FavoriteList
+
 public class FavoriteListPresenter implements FavoriteListContract.Presenter {
 
     public static String TAG = FavoriteListPresenter.class.getSimpleName();
 
-    // Declaramos la vista
     private WeakReference<FavoriteListContract.View> view;
-    // Declaramos el estado
     private FavoriteListState state;
-    // Declaramos el model
     private FavoriteListContract.Model model;
-    // Declaramos el mediator
     private CatalogMediator mediator;
     private UserItem user;
 
-    // Constructor del FavoriteListPresenter
+
     public FavoriteListPresenter(CatalogMediator mediator) {
         this.mediator = mediator;
-        // Recogemos el state del mediator
         state = mediator.getFavoriteListState();
-        // Recogemos el usuario de la pantalla login, indicando que se ha logeado correctamente
         user = mediator.getUser();
     }
 
     @Override
-    // Se inyecta la vista
     public void injectView(WeakReference<FavoriteListContract.View> view) {
         this.view = view;
     }
 
     @Override
-    // Se inyecta el model
     public void injectModel(FavoriteListContract.Model model) {
         this.model = model;
     }
 
-    // Método para que al pulsar una producto ir a la pantalla de ProductDetail
-    // y enviar también el usuario
     @Override
     public void selectProductListData(ProductItem item) {
         passDataToProductDetailScreen(item);
@@ -71,9 +61,7 @@ public class FavoriteListPresenter implements FavoriteListContract.Presenter {
         Log.e(TAG, "fetchFavoriteListData()");
         CategoryItem category = getDataFromCategoryListScreen();
 
-        // En caso de que la categoria sea nula
         if (category != null) {
-            // Establecemos la categoria en el estado
             state.category = category;
         }
 
@@ -118,7 +106,7 @@ public class FavoriteListPresenter implements FavoriteListContract.Presenter {
         return category;
     }
 
-    // Creamos el método para enviar el usuario al ProductDetail
+
     public void sendUserToProductDetail(UserItem user) {
         if (user != null) {
             mediator.setUser(user);

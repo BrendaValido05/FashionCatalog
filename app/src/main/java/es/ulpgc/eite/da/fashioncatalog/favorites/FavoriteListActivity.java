@@ -51,10 +51,9 @@ public class FavoriteListActivity extends AppCompatActivity implements FavoriteL
     RecyclerView recyclerView = findViewById(R.id.favorite_list);
     recyclerView.setAdapter(listAdapter);
 
-    // do the setup
+
     FavoriteListScreen.configure(this);
 
-    // Fetch the favorite list data
     presenter.fetchFavoriteListData();
   }
 
@@ -89,7 +88,6 @@ public class FavoriteListActivity extends AppCompatActivity implements FavoriteL
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        // Update the list adapter with the favorite products
         listAdapter.setItems(state.products);
       }
     });

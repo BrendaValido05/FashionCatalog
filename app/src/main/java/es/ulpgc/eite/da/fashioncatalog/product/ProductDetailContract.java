@@ -11,12 +11,10 @@ interface ProductDetailContract {
 
         void displayProductDetailData(ProductDetailViewModel viewModel);
 
-        //Muestra/oculta el botón de favoritos (oculto para invitados)
         void showFavoriteButton();
 
         void hideFavoriteButton();
 
-        //Actualiza el icono del botón según si el producto es favorito o no
         void updateFavoriteIcon(boolean isFavorite);
 
         //Mensaje mostrado si un invitado intenta marcar/desmarcar favorito
@@ -36,7 +34,6 @@ interface ProductDetailContract {
 
         void onPauseCalled();
 
-        //Se llama cuando el usuario pulsa el botón de favoritos
         void onFavoriteButtonClicked();
     }
 

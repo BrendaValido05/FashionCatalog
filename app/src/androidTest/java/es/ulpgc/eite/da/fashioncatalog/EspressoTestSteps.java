@@ -29,7 +29,7 @@ public class EspressoTestSteps {
     public static final String TEST_PASSWORD = "123456";
 
     //Crea el usuario de prueba directamente a través del repositorio real,
-    //usando la misma BD que usará la app durante el test. No se hace a través de la UI
+    //usando la misma bd que usará la app durante el test. No se hace a través de la UI
     //para no acoplar la fase de "arrange" del test a la pantalla de registro.
     public void seedTestUser() throws InterruptedException {
         RepositoryContract repository = CatalogRepository.getInstance(
@@ -170,7 +170,7 @@ public class EspressoTestSteps {
 
     public void pulsamosLogout() {
         // Abre el menú de opciones (por si el item aparece en el overflow) y pulsa logout.
-        // IMPORTANTE: los items mostrados dentro del popup de overflow de AppCompat no llevan
+        //  los items mostrados dentro del popup de overflow de AppCompat no llevan
         // el id del MenuItem (R.id.action_logout) en ninguna vista de su jerarquía -- solo lo
         // llevan los items que se muestran directamente en la Toolbar. Por eso hay que
         // localizarlo por su texto, no por withId().
@@ -192,12 +192,11 @@ public class EspressoTestSteps {
         }
     }
 
-    // Actualiza resetearTest()
     public void resetearTest() {
         CatalogMediator.resetInstance();
         CatalogRepository.resetInstance();
 
 
-        clearSession();   // Limpia la sesión persistida en SharedPreferences
+        clearSession();
     }
 }

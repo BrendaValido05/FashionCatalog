@@ -16,9 +16,9 @@ public class RegisterScreen {
     CatalogMediator mediator = CatalogMediator.getInstance();
 
     RepositoryContract repository = CatalogRepository.getInstance(context.get());
-    //Creamos el presenter del RegisterPresenter importando el mediator
+
     RegisterContract.Presenter presenter = new RegisterPresenter(mediator);
-    //Creamos el model del RegisterModel importando el repositorio
+
     RegisterContract.Model model = new RegisterModel(repository);
 
     presenter.injectView(new WeakReference<>(view));

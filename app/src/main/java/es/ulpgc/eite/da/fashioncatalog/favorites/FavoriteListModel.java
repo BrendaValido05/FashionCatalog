@@ -20,7 +20,6 @@ public class FavoriteListModel implements FavoriteListContract.Model {
 
   @Override
   public void fetchFavoriteListData(CategoryItem category, RepositoryContract.FetchFavoriteProductsCallback callback) {
-    // Implementación de la lógica para obtener los productos favoritos desde el repositorio.
     repository.getFavoriteProductsByUserId(category.id, callback);
   }
 

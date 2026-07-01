@@ -78,6 +78,7 @@ public class CatalogMediator {
 
         this.user = item;
     }
+
     public void setProduct(ProductItem item) {
         this.product = item;
     }

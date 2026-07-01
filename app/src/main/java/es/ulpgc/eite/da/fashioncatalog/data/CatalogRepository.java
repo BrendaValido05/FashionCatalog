@@ -32,11 +32,8 @@ public class CatalogRepository implements RepositoryContract {
 
 
     public static final String DB_FILE = "catalog.db";
-    //Importamos el JSON
     public static final String JSON_FILE = "catalog.json";
-    //Importamos la ruta del JSON
     public static final String JSON_ROOT = "categories";
-
     public static final String JSON_ROOT_FAVORITES = "favoritos";
 
     //Preferencias para saber si el catálogo ya se ha cargado alguna vez desde el JSON.
@@ -53,25 +50,22 @@ public class CatalogRepository implements RepositoryContract {
 
     //Idling resource usado por los tests de Espresso para esperar a que terminen las
     //tareas en background lanzadas por el repositorio (AsyncTask) antes de comprobar la UI.
-    //En producción permanece siempre "idle" y no tiene ningún efecto sobre el comportamiento de la app.
     public static final CountingIdlingResource IDLING_RESOURCE =
             new CountingIdlingResource("CatalogRepository");
 
-    //Base de Datos del Catalogo
     private CatalogDatabase database;
     private Context context;
 
 
     public static RepositoryContract getInstance(Context context) {
         Log.d(TAG, "getInstance()");
-        //En caso que sea null
         if(INSTANCE == null){
             //Creamos una nueva instancia
             INSTANCE = new CatalogRepository(context);
         }
-        //Retornamos la instancia
         return INSTANCE;
     }
+
     //Permite a los tests forzar la creación de una nueva instancia (por ejemplo tras
     //cerrar la base de datos en un test de Robolectric) sin afectar a los datos persistidos.
     public static void resetInstance() {
@@ -79,9 +73,8 @@ public class CatalogRepository implements RepositoryContract {
     }
 
     private CatalogRepository(Context context) {
-        // Usamos el contexto de aplicación para evitar fugas de memoria:
-        // este repositorio es un singleton que vive más que cualquier Activity,
-        // así que nunca debe retener un Context de Activity.
+        // Usamos el contexto de aplicación para evitar fugas de memoria.
+
         this.context = context.getApplicationContext();
 
         database = Room.databaseBuilder(this.context, CatalogDatabase.class, DB_FILE)
@@ -90,12 +83,11 @@ public class CatalogRepository implements RepositoryContract {
 
     }
 
-    //Implementamos el metodo que carga el catalogo
-    //IMPORTANTE: el parámetro "clearFirst" se mantiene en la firma por compatibilidad con el
-    //Contract, pero la decisión real de si se debe (re)cargar el JSON ya NO depende de él ni
-    //de si la tabla está vacía en ese instante: depende de si el catálogo ya se cargó alguna
+
+    //la decisión real de si se debe (re)cargar el JSON
+    //depende de si el catálogo ya se cargó alguna
     //vez en esta instalación (flag persistido en SharedPreferences). Así, el JSON se lee
-    //únicamente la primera ejecución; en las siguientes, los datos se leen solo de Room.
+    //únicamente la primera ejecución en las siguientes los datos se leen solo de Room.
     @Override
     public void loadCatalog(
             final boolean clearFirst, final FetchCatalogDataCallback callback) {
@@ -115,13 +107,9 @@ public class CatalogRepository implements RepositoryContract {
                 } else {
                     Log.d(TAG, "loadCatalog() -> catálogo ya cargado anteriormente, se usa Room");
                 }
-                //IMPORTANTE: los usuarios NO se siembran desde JSON. Los usuarios se crean
-                //exclusivamente a través de la pantalla de Registro y se persisten en Room (UserDao).
-                //En caso que no haya error al cargar el catalogo  de manera asíncrona
+                
                 if(callback != null) {
-                    //Cargamos el catalogo con un método del callback, como variable el boolean
 
-                    //error que indica si se cargo correctamente el catalogo
                     callback.onCatalogDataFetched(error);
                 }
             }
@@ -135,7 +123,7 @@ public class CatalogRepository implements RepositoryContract {
         if (category == null) {
             Log.e(TAG, "getProductList: CategoryItem es null");
             if (callback != null) {
-                callback.setProductList(null); // o maneja el error según tu callback
+                callback.setProductList(null);
             }
             return;
         }
@@ -258,7 +246,6 @@ public class CatalogRepository implements RepositoryContract {
                 // Obtiene el FavoriteItem correspondiente al userId y productId
                 FavoriteItem favoriteItem = getFavoriteDao().getFavoriteByUserAndProduct(userId, productId);
 
-                // Llama al callback con el FavoriteItem
                 if (callback != null) {
                     callback.onCallback(favoriteItem);
                 }
@@ -442,8 +429,8 @@ public class CatalogRepository implements RepositoryContract {
 
     //Persistencia de sesión
     //Se guarda en las mismas SharedPreferences que el flag de carga del catálogo.
-    //No usamos la BD para esto porque es un dato  de "estado de la app",
-    //no un dato de catálogo, y así sobrevive a un fallbackToDestructiveMigration().
+    //No usamos la bd para esto porque es un dato  de estado de la app,
+    //no un dato de catálogo, y así sobrevive a un fallbackToDestructiveMigration
     @Override
     public void saveSessionUserId(int userId) {
         getPrefs().edit().putInt(KEY_SESSION_USER_ID, userId).apply();

@@ -8,9 +8,9 @@ import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
 import es.ulpgc.eite.da.fashioncatalog.data.RepositoryContract;
 import es.ulpgc.eite.da.fashioncatalog.products.ProductListViewModel;
 
-//Contrato de ProductList
+
 interface FavoriteListContract {
-  //Métodos de la vista
+
   interface View {
     void injectPresenter(Presenter presenter);
 
@@ -24,20 +24,20 @@ interface FavoriteListContract {
 
     void displayProductListData(ProductListViewModel viewModel);
   }
-  //Métodos del presenter
+
   interface Presenter {
     void injectView(WeakReference<View> view);
     void injectModel(Model model);
     void selectProductListData(ProductItem item);
 
-      void onResume();
+    void onResume();
 
     void onRestart();
 
     void fetchFavoriteListData();
     void setProductList(List<ProductItem> products);
   }
-  //Métodos del model
+
   interface Model {
     void fetchFavoriteListData(CategoryItem category, RepositoryContract.FetchFavoriteProductsCallback callback);
     void getFavoriteProductsByUserId(int userId, RepositoryContract.FetchFavoriteProductsCallback callback);

@@ -9,7 +9,6 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-// Define the FavoriteItem entity
 @Entity(
         tableName = "favoritos",
         foreignKeys = {
@@ -29,18 +28,15 @@ import androidx.room.PrimaryKey;
         indices = { @Index(value = {"userId", "productId"}, unique = true) }
 )
 public class FavoriteItem {
-    // Define the id column with auto generation
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "id")
     public int id;
 
-    // Define the userId column and mark it as non-null
     @NonNull
     @ColumnInfo(name = "userId")
     public int userId;
 
-    // Define the productId column and mark it as non-null
     @NonNull
     @ColumnInfo(name = "productId")
     public int productId;

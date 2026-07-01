@@ -6,9 +6,9 @@ import es.ulpgc.eite.da.fashioncatalog.data.CategoryItem;
 import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
 import es.ulpgc.eite.da.fashioncatalog.data.RepositoryContract;
 
-//Contrato de ProductList
+
 interface ProductListContract {
-    //Métodos de la vista
+
     interface View {
         void hideFavoriteButton();
 
@@ -22,7 +22,7 @@ interface ProductListContract {
 
         void showFavoriteButton();
     }
-    //Métodos del presenter
+
     interface Presenter {
 
 
@@ -32,7 +32,7 @@ interface ProductListContract {
         void selectProductListData(ProductItem item);
 
     }
-    //Métodos del model
+
     interface Model {
         void fetchProductListData(
                 CategoryItem category, RepositoryContract.GetProductListCallback callback);

@@ -121,7 +121,7 @@ public interface RepositoryContract {
 
     void registerUser(UserItem user, RegisterUserCallback callback);
 
-    //Persistencia de sesión (SharedPreferences)
+
     //Guarda el id del usuario logueado para poder restaurar la sesión al reabrir la app
     void saveSessionUserId(int userId);
 

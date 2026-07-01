@@ -21,11 +21,8 @@ public class CategoryListScreen {
         CategoryListContract.Presenter presenter=new CategoryListPresenter(mediator);
         //Creamos el model del CategoryListModel importando el repositorio
         CategoryListModel model = new CategoryListModel(repository);
-        //Inyectamos la vista con el presenter
         presenter.injectView(new WeakReference<>(view));
-        //Inyectamos el model con el presenter
         presenter.injectModel(model);
-        //Inyectamos el presenter con la vista
         view.injectPresenter(presenter);
     }
 }

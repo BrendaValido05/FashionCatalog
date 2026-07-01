@@ -21,28 +21,27 @@ public class LoginListAdapter extends RecyclerView.Adapter<LoginListAdapter.View
 
 
   public LoginListAdapter(View.OnClickListener listener) {
-    //Inicializamos las variables
     itemList = new ArrayList();
     clickListener = listener;
   }
 
-  //Método para añadir un item de CategoryItem
+
   public void addItem(CategoryItem item){
     itemList.add(item);
     notifyDataSetChanged();
   }
-  //Método para añadir una lista de items de CategoryItem
+
   public void addItems(List<CategoryItem> items){
     itemList.addAll(items);
     notifyDataSetChanged();
   }
-  //Método para cambiar una lista de items de CategoryItem por la actual
+
   public void setItems(List<CategoryItem> items){
     itemList = items;
     notifyDataSetChanged();
   }
 
-  //Método que devuelve el número de items de CategoryItem
+
   @Override
   public int getItemCount() {
     return itemList.size();

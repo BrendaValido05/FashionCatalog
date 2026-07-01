@@ -21,9 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-//Tests unitarios (Robolectric) de la capa Repository: registro de usuarios (incluyendo
-//detección de email duplicado), carga del catálogo desde JSON solo la primera vez,
-//y gestión de favoritos y de la sesión persistida.
+
 @RunWith(RobolectricTestRunner.class)
 public class CatalogRepositoryTest {
 
@@ -195,7 +193,7 @@ public class CatalogRepositoryTest {
         assertEquals(-1, reloaded.getSessionUserId());
     }
 
-    // ---- helpers -------------------------------------------------------------------
+
 
     private int registerAndWait(String name, String email, String password) throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
@@ -224,7 +222,7 @@ public class CatalogRepositoryTest {
     }
 
     private void deleteAllCategoriesDirectly() throws InterruptedException {
-        // No existe un método público para esto en el Contract: lo hacemos a través de
+        // No existe un métdo público para esto en el Contract: lo hacemos a través de
         // deleteCategory() para cada categoría devuelta, usando el propio Repository.
         final CountDownLatch latch = new CountDownLatch(1);
         repository.getCategoryList(categories -> {

@@ -9,7 +9,6 @@ public class RegisterModel implements RegisterContract.Model {
 
   private RepositoryContract repository;
 
-  //Constructor de RegisterModel
   public RegisterModel(RepositoryContract repository) {
     this.repository = repository;
   }

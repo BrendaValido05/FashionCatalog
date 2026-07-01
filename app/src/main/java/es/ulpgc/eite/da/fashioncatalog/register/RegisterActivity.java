@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import es.ulpgc.eite.da.fashioncatalog.R;
 
-//Activity de Register
+
 public class RegisterActivity extends AppCompatActivity implements RegisterContract.View {
 
     public static String TAG = RegisterActivity.class.getSimpleName();

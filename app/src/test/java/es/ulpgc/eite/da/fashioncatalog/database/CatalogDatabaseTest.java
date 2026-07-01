@@ -21,8 +21,7 @@ import es.ulpgc.eite.da.fashioncatalog.data.FavoriteItem;
 import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
 import es.ulpgc.eite.da.fashioncatalog.data.UserItem;
 
-//Tests unitarios (Robolectric) de la capa de base de datos: comprueban directamente
-//los DAO de Room (sin pasar por el Repository) usando una base de datos en memoria.
+
 @RunWith(RobolectricTestRunner.class)
 public class CatalogDatabaseTest {
 

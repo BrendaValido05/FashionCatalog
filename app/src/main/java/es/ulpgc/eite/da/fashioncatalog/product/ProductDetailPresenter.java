@@ -74,8 +74,6 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
         updateFavoriteButtonVisibility();
     }
 
-    //Muestra/oculta el botón de favoritos según si hay usuario logeado (invitado = oculto)
-    //y, si lo hay, comprueba si el producto actual ya es favorito para pintar el icono correcto
     private void updateFavoriteButtonVisibility() {
         ProductDetailContract.View safeView = view.get();
         if (safeView == null) {

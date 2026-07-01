@@ -8,7 +8,6 @@ public class LoginListModel implements LoginListContract.Model {
 
     private RepositoryContract repository;
 
-    //Constructor de CategoryListModel
     public LoginListModel(RepositoryContract repository) {
         this.repository = repository;
 

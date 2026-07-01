@@ -5,7 +5,7 @@ import java.lang.ref.WeakReference;
 import es.ulpgc.eite.da.fashioncatalog.data.RepositoryContract;
 import es.ulpgc.eite.da.fashioncatalog.data.UserItem;
 
-//Contrato de Register con los métodos de la vista, el modelo y el presenter
+
 interface RegisterContract {
 
   interface View {

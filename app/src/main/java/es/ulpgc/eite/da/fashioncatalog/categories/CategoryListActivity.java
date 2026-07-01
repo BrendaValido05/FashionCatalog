@@ -22,14 +22,10 @@ import es.ulpgc.eite.da.fashioncatalog.products.ProductListActivity;
 public class CategoryListActivity extends AppCompatActivity implements CategoryListContract.View {
 
     public static String TAG = CategoryListActivity.class.getSimpleName();
-
-    // Presenter
     CategoryListContract.Presenter presenter;
 
-    // Adapter
     private CategoryListAdapter listAdapter;
 
-    // Floating Button
     private FloatingActionButton goTofavouriteButtonFB;
 
     @Override
@@ -37,7 +33,6 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
 
-        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -45,7 +40,6 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
             actionBar.setTitle(R.string.app_name);
         }
 
-        // RecyclerView
         RecyclerView recyclerView = findViewById(R.id.category_list);
 
         // Botón de Favoritos
@@ -74,10 +68,8 @@ public class CategoryListActivity extends AppCompatActivity implements CategoryL
             recyclerView.setAdapter(listAdapter);
         }
 
-        // Configuración MVP
         CategoryListScreen.configure(this);
 
-        // Cargar datos
         if (presenter != null) {
             presenter.fetchCategoryListData();
             presenter.showFavoriteButton();

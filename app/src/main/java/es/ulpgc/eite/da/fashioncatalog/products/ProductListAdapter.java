@@ -16,39 +16,30 @@ import es.ulpgc.eite.da.fashioncatalog.data.ProductItem;
 public class ProductListAdapter
         extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
 
-    //ArrayList de productos
     private List<ProductItem> itemList;
     private final View.OnClickListener clickListener;
 
-    //Constructor de la clase
     public ProductListAdapter(View.OnClickListener listener) {
-        //Creamos el ArrayList
         itemList = new ArrayList();
-        //Asignamos el listener
         clickListener = listener;
     }
 
-    //Método para agregar un producto
+
     public void addItem(ProductItem item){
-        //Agregamos el producto al ArrayList
+
         itemList.add(item);
-        //Notificamos al adaptador
+
         notifyDataSetChanged();
     }
 
-    //Método para agregar una lista de productos
     public void addItems(List<ProductItem> items){
-        //Agregamos los productos al ArrayList
         itemList.addAll(items);
-        //Notificamos al adaptador
         notifyDataSetChanged();
     }
 
-    //Método para intercambiar con el setter una lista de productos
+
     public void setItems(List<ProductItem> items){
-        //Cambiamos la lista de productos
         itemList = items;
-        //Notificamos al adaptador
         notifyDataSetChanged();
     }
 
@@ -68,7 +59,6 @@ public class ProductListAdapter
     }
 
     @Override
-    //Método para obtener el tamaño de la lista
     public int getItemCount() {
         return itemList.size();
     }

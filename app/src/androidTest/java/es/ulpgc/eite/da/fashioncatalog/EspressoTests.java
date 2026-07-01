@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters;
 import es.ulpgc.eite.da.fashioncatalog.data.CatalogRepository;
 import es.ulpgc.eite.da.fashioncatalog.login.LoginListActivity;
 
-//Tests de instrumentación (Espresso) que recorren los flujos principales exigidos por la
+
 //rúbrica: login (correcto/incorrecto), invitado, navegación maestro-detalle, favoritos
 //(solo para usuarios logueados) y logout.
 @RunWith(AndroidJUnit4.class)
@@ -30,17 +30,7 @@ public class EspressoTests {
 
     public EspressoTestSteps testSteps = new EspressoTestSteps();
 
-    // IMPORTANTE: ActivityTestRule lanza LoginListActivity (y por tanto ejecuta su onCreate,
-    // que ya hace CatalogMediator.getInstance()) ANTES de que se ejecuten los métodos @Before.
-    // Por eso CatalogMediator.resetInstance() / CatalogRepository.resetInstance() NUNCA deben
-    // llamarse en un @Before: si se hiciera, la Activity ya lanzada se quedaría con una
-    // instancia "vieja" del mediator (donde LoginListPresenter guarda el usuario al hacer
-    // login), mientras que cualquier pantalla posterior (p.ej. CategoryListActivity tras el
-    // login) pediría CatalogMediator.getInstance() de nuevo y, al estar la INSTANCE a null,
-    // crearía una instancia "nueva" sin usuario. Resultado: mediator.getUser() devuelve null
-    // en CategoryListPresenter aunque el login haya sido correcto, y el FAB de favoritos
-    // nunca se muestra. El reset solo es seguro en @After, una vez terminado el test y antes
-    // de que ActivityTestRule lance la Activity del siguiente test.
+
     @Before
     public void setUp() throws InterruptedException {
         IdlingRegistry.getInstance().register(CatalogRepository.IDLING_RESOURCE);
@@ -48,10 +38,10 @@ public class EspressoTests {
         // Limpieza explícita antes de cada test (no toca los singletons CatalogMediator/CatalogRepository)
         testSteps.clearSession();
 
-        // Aseguramos que el usuario de prueba existe en BD antes de cada test de login
+        // Aseguramos que el usuario de prueba existe en bd antes de cada test de login
         testSteps.seedTestUser();
 
-        // Dejamos al usuario de prueba sin favoritos: la BD persiste entre tests
+        // Dejamos al usuario de prueba sin favoritos: la bd persiste entre tests
         // (solo se limpia la sesión), así que sin esto un favorito marcado en un test
         // anterior contaminaría los tests posteriores que tocan el mismo producto.
         testSteps.clearFavorites();

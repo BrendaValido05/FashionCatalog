@@ -78,7 +78,7 @@ public class MasterDetailTests {
     @Test
     public void appTest() {
 
-        // --- Pantalla de Categorías (maestro) ---------------------------------------
+
         rotate();
 
         onView(new RecyclerViewMatcher(R.id.category_list)
@@ -101,7 +101,6 @@ public class MasterDetailTests {
                 .atPositionOnView(0, R.id.content))
                 .check(matches(withText(containsString("Bolsos"))));
 
-        // --- Navegamos a Productos (maestro-detalle, nivel 1) -----------------------
         ViewInteraction categoryZapatos =
                 onView(new RecyclerViewMatcher(R.id.category_list)
                         .atPositionOnView(1, R.id.content))
@@ -124,7 +123,7 @@ public class MasterDetailTests {
                 .atPositionOnView(1, R.id.content))
                 .check(matches(withText(containsString("Botines de cuero"))));
 
-        // --- Navegamos al Detalle (maestro-detalle, nivel 2) ------------------------
+
         ViewInteraction productBotines =
                 onView(new RecyclerViewMatcher(R.id.product_list)
                         .atPositionOnView(1, R.id.content))
@@ -139,14 +138,11 @@ public class MasterDetailTests {
 
         rotate();
 
-        // El detalle debe seguir mostrando los datos del MISMO producto tras la segunda
-        // rotación: si el ProductDetailPresenter cacheara mal el producto seleccionado
-        // en CatalogMediator, este assert detectaría la inconsistencia
         onView(withId(R.id.product_detail))
                 .perform(androidx.test.espresso.action.ViewActions.scrollTo())
                 .check(matches(isDisplayed()));
 
-        // --- Volvemos hacia atrás comprobando que el back-stack es coherente -------
+
         pressBack();
 
         rotate();
